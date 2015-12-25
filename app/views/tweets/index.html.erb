@@ -1,0 +1,28 @@
+<h1>Tweets</h1>
+
+<div>
+  <form method="get" action="/tweets">
+    <div>
+      <label>Longtitude</label>
+      <input type="text" name="lon"/>
+    </div>
+    <div>
+      <label>Latitude</label>
+      <input type="text" name="lat"/>
+    </div>
+    <div>
+      <label>Radius</label>
+      <input type="text" name="radius"/>
+    </div>
+    <div>
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+
+<div>
+  <%- @tweets.each do |tweet| -%>
+    <div>Tweet: <%= tweet.to_hash[:text] %></div>
+    <div>Created at: <%= tweet.to_hash[:created_at] %></div>
+  <%- end -%>
+</div>
