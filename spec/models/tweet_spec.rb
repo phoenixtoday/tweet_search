@@ -35,6 +35,8 @@ RSpec.describe Tweet, :type => :model do
         "hashtags": ["twitter"]
       }
     )
+    tweet.reverse_coordinates_for_twitter!
+
     expect(tweet.to_hash[:geo][:coordinates][0]).to eq 139
     expect(tweet.to_hash[:geo][:coordinates][1]).to eq 50
   end

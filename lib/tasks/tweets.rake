@@ -19,7 +19,9 @@ namespace :tweets do
 
     TweetStream::Client.new.sample do |status|
       attributes = status.to_hash.select{|k,v| %w{id_str created_at text geo entities}.include?(k.to_s)}
-      repository.save(Tweet.new(attributes))
+      tweet = Tweet.new(attributes)
+      tweet.reverse_coordinates_for_twitter!
+      repository.save(tweet)
     end
   end
 end

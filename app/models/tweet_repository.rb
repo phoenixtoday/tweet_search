@@ -19,4 +19,27 @@ class TweetRepository
     end
   end
 
+  def search_by_location(lon, lat, radius)
+    search(query: {
+      nested: {
+        path: "geo",
+        query: {
+          bool: {
+            must: {
+              match_all: {}
+            },
+            filter: {
+              geohash_cell: {
+                "geo.coordinates": {
+                  lon: lon,
+                  lat: lat
+                },
+                precision: radius
+              }
+            }
+          }
+        }
+      }
+    })
+  end
 end
