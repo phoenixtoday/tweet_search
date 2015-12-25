@@ -42,7 +42,8 @@ class TweetRepository
                   }
                 }
               }
-            ]
+            ],
+            _cache: true
           }
         }
       }
