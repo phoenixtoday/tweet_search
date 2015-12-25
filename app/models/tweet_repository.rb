@@ -13,32 +13,36 @@ class TweetRepository
       indexes :id, type: 'string'
       indexes :id_str, type: 'string'
       indexes :created_at, type: 'date'
-      indexes :text, type: 'string'
+      indexes :text, type: 'string', analyzer: 'snowball'
       indexes :geo, type: 'nested', properties: {
         coordinates:  { type: 'geo_point', geohash: true, geohash_prefix: true, geohash_precision: 10 }
       }
     end
   end
 
-  def search_by_location(lon, lat, radius)
+  def search_by_location(lon, lat, radius, hashtag=nil)
+    query = hashtag ? { term: { text: hashtag }} : { match_all: {}}
+
     search(query: {
-      nested: {
-        path: "geo",
-        query: {
+      filtered: {
+        query: query,
+        filter: {
           bool: {
-            must: {
-              match_all: {}
-            },
-            filter: {
-              geohash_cell: {
-                "geo.coordinates": {
-                  lon: lon,
-                  lat: lat
-                },
-                precision: radius,
-                neighbors: true
+            must: [
+              nested: {
+                path: "geo",
+                filter: {
+                  geohash_cell: {
+                    "geo.coordinates": {
+                      lon: lon,
+                      lat: lat
+                    },
+                    precision: radius,
+                    neighbors: true
+                  }
+                }
               }
-            }
+            ]
           }
         }
       }

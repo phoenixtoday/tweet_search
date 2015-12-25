@@ -111,4 +111,46 @@ RSpec.describe TweetRepository, :type => :model do
     result = subject.search_by_location(139, 50, 3).to_a
     expect(result.first.to_hash[:id_str]).to eq '679936067110334465'
   end
+
+  it "should be able to filter text on top of geo point" do
+    tweet_one = Tweet.new(
+      "id_str": '679936067110334461',
+      "created_at": "Thu Dec 21 05:55:23 +0000 2015",
+      "text": 'hello twitter',
+      "geo": {
+        "type": 'Point',
+        "coordinates": [
+          50,
+          139
+        ]
+      },
+      "entities": {
+        "hashtags": ["twitter"]
+      }
+    )
+    tweet_two = Tweet.new(
+      "id_str": '679936067110334462',
+      "created_at": "Thu Dec 22 05:55:23 +0000 2015",
+      "text": 'hello twitter, #banjo',
+      "geo": {
+        "type": 'Point',
+        "coordinates": [
+          50,
+          139
+        ]
+      },
+      "entities": {
+        "hashtags": ["twitter"]
+      }
+    )
+
+    tweet_one.reverse_coordinates_for_twitter!
+    subject.save(tweet_one)
+
+    tweet_two.reverse_coordinates_for_twitter!
+    subject.save(tweet_two)
+
+    result = subject.search_by_location(139, 50, 3, 'banjo').to_a
+    expect(result.first.to_hash[:id_str]).to eq '679936067110334462'
+  end
 end
