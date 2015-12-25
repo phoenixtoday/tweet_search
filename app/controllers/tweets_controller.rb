@@ -5,7 +5,7 @@ class TweetsController < ApplicationController
     lon = params[:lon] || -122.2361
     lat = params[:lat] || 37.4828
     radius = params[:radius] || 3
-    hashtag = params[:hashtag].present? ? params[:hashtag] : nil
+    hashtag = params[:hashtag].present? ? params[:hashtag].downcase : nil
     lon = lon.to_f
     lat = lat.to_f
     radius = radius.to_i
