@@ -15,7 +15,7 @@ namespace :tweets do
     end
 
     repository = TweetRepository.new
-    repository.create_index! force: true
+    # repository.create_index! force: true
 
     TweetStream::Client.new.sample do |status|
       attributes = status.to_hash.select{|k,v| %w{id_str created_at text geo entities}.include?(k.to_s)}
