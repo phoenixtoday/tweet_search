@@ -35,7 +35,8 @@ class TweetRepository
                   lon: lon,
                   lat: lat
                 },
-                precision: radius
+                precision: radius,
+                neighbors: true
               }
             }
           }
@@ -46,6 +47,6 @@ class TweetRepository
       created_at: { order: "desc"}
     },
     size: 250
-  )
+    )
   end
 end
