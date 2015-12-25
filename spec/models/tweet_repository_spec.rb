@@ -66,7 +66,49 @@ RSpec.describe TweetRepository, :type => :model do
 
     result = subject.search_by_location(139, 50, 3).to_a
     target_tweet = result.first
-    expect(target_tweet.to_hash[:id_str]).to eq '679936067110334468'
+    expect(result.size).to be > 0
     expect(result.all?{ |tweet| tweet.to_hash[:id_str] != '679936067110334469'}).to be true
+  end
+
+  it "should be able to sort tweets by created_at" do
+    tweet_one = Tweet.new(
+      "id_str": '679936067110334467',
+      "created_at": "Thu Dec 23 05:55:23 +0000 2015",
+      "text": 'hello twitter',
+      "geo": {
+        "type": 'Point',
+        "coordinates": [
+          50,
+          139
+        ]
+      },
+      "entities": {
+        "hashtags": ["twitter"]
+      }
+    )
+    tweet_two = Tweet.new(
+      "id_str": '679936067110334465',
+      "created_at": "Thu Dec 25 05:55:23 +0000 2015",
+      "text": 'hello twitter',
+      "geo": {
+        "type": 'Point',
+        "coordinates": [
+          50,
+          139
+        ]
+      },
+      "entities": {
+        "hashtags": ["twitter"]
+      }
+    )
+
+    tweet_one.reverse_coordinates_for_twitter!
+    subject.save(tweet_one)
+
+    tweet_two.reverse_coordinates_for_twitter!
+    subject.save(tweet_two)
+
+    result = subject.search_by_location(139, 50, 3).to_a
+    expect(result.first.to_hash[:id_str]).to eq '679936067110334465'
   end
 end

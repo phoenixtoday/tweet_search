@@ -10,6 +10,7 @@ class TweetRepository
 
   settings number_of_shards: 1 do
     mapping do
+      indexes :id, type: 'string'
       indexes :id_str, type: 'string'
       indexes :created_at, type: 'date'
       indexes :text, type: 'string'
@@ -40,6 +41,11 @@ class TweetRepository
           }
         }
       }
-    })
+    },
+    sort: {
+      created_at: { order: "desc"}
+    },
+    size: 250
+  )
   end
 end
