@@ -12,7 +12,11 @@
     </div>
     <div>
       <label>Radius</label>
-      <input type="text" name="radius"/>
+      <select name="radius">
+        <%- 10.times do |n| -%>
+          <option value="<%= n+1 %>"><%= n+1 %></option>
+        <%- end -%>
+      </select>
     </div>
     <div>
       <input type="submit" value="Submit">
@@ -24,8 +28,8 @@
 </div>
 
 <div>
-  <%- @tweets.each do |tweet| -%>
-    <div>Tweet: <%= tweet.to_hash[:text] %></div>
+  <%- @tweets.each_with_index do |tweet, index| -%>
+    <div>Tweet <%= index + 1 %> : <%= tweet.to_hash[:text] %></div>
     <div>Created at: <%= tweet.to_hash[:created_at] %></div>
   <%- end -%>
 </div>
