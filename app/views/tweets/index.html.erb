@@ -39,23 +39,23 @@
 </div>
 
 <script>
-function initMap() {
-  var coordinates = <%= @tweets.collect { |tweet|  tweet.to_hash[:geo]['coordinates'] } %>;
-  var firstLatLng = { lng: coordinates[0][0], lat: coordinates[0][1] };
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
-    center: firstLatLng
-  });
-
-  for(var i =0; i < coordinates.length; i++) {
-    var latlng = { lng: coordinates[i][0], lat: coordinates[i][1]};
-    new google.maps.Marker({
-      position: latlng,
-      map: map,
-      title: 'Tweet'
+  function initMap() {
+    var coordinates = <%= @tweets.collect { |tweet|  tweet.to_hash[:geo]['coordinates'] } %>;
+    var firstLatLng = coordinates.length > 0 ? { lng: coordinates[0][0], lat: coordinates[0][1] } : { lng: <%= params[:lon] %>, lat: <%= params[:lat] %> };
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: firstLatLng
     });
+
+    for(var i =0; i < coordinates.length; i++) {
+      var latlng = { lng: coordinates[i][0], lat: coordinates[i][1]};
+      new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: 'Tweet'
+      });
+    }
   }
-}
 </script>
 
 <script async defer
