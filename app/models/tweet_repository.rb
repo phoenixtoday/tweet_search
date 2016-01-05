@@ -14,7 +14,7 @@ class TweetRepository
       indexes :id_str, type: 'string'
       indexes :created_at, type: 'date'
       indexes :text, type: 'string', analyzer: 'snowball'
-      indexes :geo, type: 'nested', properties: {
+      indexes :geo, type: 'object', properties: {
         coordinates:  { type: 'geo_point', geohash: true, geohash_prefix: true, geohash_precision: 10 }
       }
     end
@@ -28,21 +28,16 @@ class TweetRepository
         query: query,
         filter: {
           bool: {
-            must: [
-              nested: {
-                path: "geo",
-                filter: {
-                  geohash_cell: {
-                    "geo.coordinates": {
-                      lon: lon,
-                      lat: lat
-                    },
-                    precision: radius,
-                    neighbors: true
-                  }
-                }
+            must: {
+              geohash_cell: {
+                "geo.coordinates": {
+                  lon: lon,
+                  lat: lat
+                },
+                precision: radius,
+                neighbors: true
               }
-            ],
+            },
             _cache: true
           }
         }
