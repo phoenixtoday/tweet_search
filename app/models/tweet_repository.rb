@@ -23,30 +23,31 @@ class TweetRepository
   def search_by_location(lon, lat, radius, hashtag=nil)
     query = hashtag ? { term: { text: hashtag }} : { match_all: {}}
 
-    search(query: {
-      filtered: {
-        query: query,
-        filter: {
-          bool: {
-            must: {
-              geohash_cell: {
-                "geo.coordinates": {
-                  lon: lon,
-                  lat: lat
-                },
-                precision: radius,
-                neighbors: true
-              }
-            },
-            _cache: true
+    search(
+      query: {
+        filtered: {
+          query: query,
+          filter: {
+            bool: {
+              must: {
+                geohash_cell: {
+                  "geo.coordinates": {
+                    lon: lon,
+                    lat: lat
+                  },
+                  precision: radius,
+                  neighbors: true
+                }
+              },
+              _cache: true
+            }
           }
         }
-      }
-    },
-    sort: {
-      created_at: { order: "desc"}
-    },
-    size: 250
+      },
+      sort: {
+        created_at: { order: "desc"}
+      },
+      size: 250
     )
   end
 end
