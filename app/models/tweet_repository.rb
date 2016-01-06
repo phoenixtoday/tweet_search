@@ -2,7 +2,7 @@ class TweetRepository
   include Elasticsearch::Persistence::Repository
 
   def initialize(options={})
-    index  options[:index] || [Rails.application.engine_name, Rails.env].join('_')
+    index  options[:index] || [Rails.application.engine_name, Rails.env, 'tweet'].join('_')
     client Elasticsearch::Client.new url: 'http://localhost:9200', log: true
   end
 
